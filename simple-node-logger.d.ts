@@ -18,10 +18,28 @@ declare interface Logger {
 	
 }
 
+declare interface AppenderOption {
+	typeName?: string;
+	level?: LogLevel;
+	levels?: LogLevel[];
+	writer?: (...message: any[]) => void;
+}
+
+// SimpleLogger
 declare interface Manager {
 	createConsoleAppender();
 	createRollingFileAppender();
-	createLogger(name: string): Logger;
+	createLogger(option: LoggerOption): Logger;
+	createLogger(category: string, level?: LogLevel): Logger;
+	createConsoleAppender(option: AppenderOption): Appender;
+	createFileAppender(option: AppenderOption): Appender;
+	createRollingFileAppender(option: AppenderOption): Appender;
+	addAppender(appender: Appender): Appender;
+	getAppenders(): Appender[];
+	getLoggers(): Logger[];
+	startRefreshThread(): void;
+	setAllLoggerLevels(level: LogLevel): void;
+	readConfig((err: any) => any): void;
 }
 
 declare interface LoggerOption {
@@ -34,11 +52,12 @@ declare interface LoggerOption {
 }
 
 declare interface Appender {
+	formatter(entry: any): string;
+	write(entry: any): void;
+	setLevel(level: LogLevel): void;
 }
 
-declare interface SimpleLogger {
-	createLogger(option: LoggerOption): Logger;
-	createLogger(category: string, level: LogLevel): Logger;
+declare interface LoggerStatic {
 	createSimpleLogger(): Logger;
 	createSimpleLogger(logFile: string): Logger;
 	createSimpleLogger(option: LoggerOption): Logger;
@@ -46,14 +65,8 @@ declare interface SimpleLogger {
 	createSimpleFileLogger(option: LoggerOption): Logger;
 	createRollingFileLogger(option: LoggerOption): Logger;
 	createLogManager(option: LoggerOption): Manager;
-	setAllLoggerLevels(level: LogLevel): void;
-	startRefreshThread(): void;
-	readConfig((err: any) => any): void;
-	getLoggers(): Logger[];
-	getAppenders(): Appender[];
-	addAppender(appender: Appender): Appender;
 }
 
-declare var _Static: SimpleLogger;
+declare var _Static: LoggerStatic;
 
 export = _Static;
