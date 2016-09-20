@@ -39,7 +39,7 @@ declare interface Manager {
 	getLoggers(): Logger[];
 	startRefreshThread(): void;
 	setAllLoggerLevels(level: LogLevel): void;
-	readConfig((err: any) => any): void;
+	readConfig(cb: (err: any) => any): void;
 }
 
 declare interface LoggerOption {
